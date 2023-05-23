@@ -1,11 +1,9 @@
 (ns build
-  (:require [clojure.tools.build.api :as b]
-            [clojure.edn :as edn])
+  (:require [clojure.tools.build.api :as b])
   (:refer-clojure :exclude [compile]))
 
-(def deps-data (edn/read-string (slurp "deps.edn")))
 (def lib 'com.techascent/tmd-parquet)
-(def version "1.000-beta-38-SNAPSHOT")x
+(def version "1.000-beta-38")
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
 (def jar-file (format "target/%s.jar" (name lib)))
