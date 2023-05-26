@@ -1,29 +1,54 @@
-# Simple Parquet Bindings
+# Easy Parquet Bindings
 
+A single jar that enables read/write of csv and parquet.
 
-Single dependency read/write of csv and parquet.
+## Use
 
+Depend on these maven coordinates:
 
-## Efficiency
+    [com.techascent/tmd-parquet "1.000-beta-39"]
 
-This library includes bindings to logback classic which [disable debug logging](resources/logback.xml).  This is crucial
-to get any [performance whatsoever out of parquet](https://techascent.github.io/tech.ml.dataset/tech.v3.libs.parquet.html) as
-by default it includes extremely verbose debug write logging.
+Then, for small datasets:
 
+```clj
+(require '[tech.v3.dataset :as ds])
+(require '[tech.v3.libs.parquet :as parquet])
+(-> (ds/->>dataset {:x (concat (repeat 3 "a") (repeat 3 "b"))
+                    :y (range 6)
+                    :z (repeatedly 6 rand)})
+                   (parquet/ds->parquet "little.parquet"))
+```
 
-## Usage
-```clojure
- ;; setup either log4j2 or logback-classic to get rid of logger warnings
-user> (require '[tech.v3.dataset :as ds])
-nil
-user> (require '[tech.v3.dataset.io.csv :as ds-csv])
-nil
-user> (require '[tech.v3.libs.parquet :as parquet])
-nil
-user> (require '[tech.v3.io :as io])
-nil
-user> (->> (io/gzip-input-stream "https://github.com/techascent/tech.ml.dataset/raw/master/test/data/ames-train.csv.gz")
-           (ds-csv/csv->dataset-seq)
-           (parquet/ds-seq->parquet "result.parquet"))
-:ok
+And for bigger datasets (streaming a batch at a time):
+
+```clj
+(require '[tech.v3.dataset :as ds])
+(require '[tech.v3.dataset.io.csv :as ds-csv])
+(require '[tech.v3.libs.parquet :as parquet])
+(require '[tech.v3.io :as io])
+(->> (io/gzip-input-stream "https://github.com/techascent/tech.ml.dataset/raw/master/test/data/ames-train.csv.gz")
+     (ds-csv/csv->dataset-seq)
+     (parquet/ds-seq->parquet "result.parquet"))
+```
+
+## A Note About Possible Performance Issues
+
+If Parquet read/write performance is degraded by profoundly verbose debug-level logging, be sure to disable that.
+
+An example `logback.xml` might look something like:
+
+```
+<configuration debug="false">
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
 ```
