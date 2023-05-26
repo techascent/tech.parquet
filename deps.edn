@@ -1,6 +1,5 @@
-{:paths ["src" "resources"]
+{:paths ["src"]
  :deps {techascent/tech.ml.dataset {:mvn/version "7.000-beta-38"}
-        ch.qos.logback/logback-classic {:mvn/version "1.3.5"}
         org.apache.parquet/parquet-hadoop {:mvn/version "1.12.0"
                                            :exclusions [org.slf4j/slf4j-log4j12]}
         org.apache.hadoop/hadoop-common {:mvn/version "3.3.0"
@@ -36,14 +35,17 @@
                                                        org.apache.hadoop.thirdparty/hadoop-shaded-protobuf_3_7
                                                        org.apache.hadoop/hadoop-auth
 
-
                                                        org.apache.kerby/kerb-core
 
+                                                       org.checkerframework/checker-qual
+
+                                                       commons-logging/commons-logging
                                                        commons-cli/commons-cli
                                                        commons-net/commons-net
                                                        org.apache.commons/commons-lang3
                                                        org.apache.commons/commons-text
                                                        org.apache.commons/commons-configuration2
+                                                       org.apache.commons/commons-math3
 
                                                        com.google.re2j/re2j
                                                        com.google.code.findbugs/jsr305
@@ -65,20 +67,17 @@
                                                                       com.google.inject.extensions/guice-servlet]}
         ;; M-1 mac support for snappy
         org.xerial.snappy/snappy-java {:mvn/version "1.1.8.4"}}
- :aliases
- {
-  :build
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.8.1" :git/sha "7d40500"}}
-   :ns-default build}
-  :deploy
-  {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
-   :exec-fn deps-deploy.deps-deploy/deploy
-   :exec-args {:installer :remote
-               :sign-releases? true
-               :artifact "target/tmd-parquet.jar"}}
-  :install
-  {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
-   :exec-fn deps-deploy.deps-deploy/deploy
-   :exec-args {:installer :local
-               :artifact "target/tmd-parquet.jar"}}}
- }
+ :aliases {:build
+           {:deps {io.github.clojure/tools.build {:git/tag "v0.8.1" :git/sha "7d40500"}}
+            :ns-default build}
+           :deploy
+           {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
+            :exec-fn deps-deploy.deps-deploy/deploy
+            :exec-args {:installer :remote
+                        :sign-releases? true
+                        :artifact "target/tmd-parquet.jar"}}
+           :install
+           {:replace-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
+            :exec-fn deps-deploy.deps-deploy/deploy
+            :exec-args {:installer :local
+                        :artifact "target/tmd-parquet.jar"}}}}

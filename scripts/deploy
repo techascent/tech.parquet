@@ -2,6 +2,7 @@
 
 set -e
 
+clj -T:build clean
 clj -T:build jar
 cp target/classes/META-INF/maven/com.techascent/tmd-parquet/pom.xml .
 clj -X:deploy

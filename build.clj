@@ -3,12 +3,13 @@
   (:refer-clojure :exclude [compile]))
 
 (def lib 'com.techascent/tmd-parquet)
-(def version "1.000-beta-38")
+(def version "1.000-beta-39")
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
 (def jar-file (format "target/%s.jar" (name lib)))
 
 (defn clean [_]
+  (b/delete {:path "pom.xml"})
   (b/delete {:path "target"}))
 
 (defn jar [_]
